@@ -72,6 +72,9 @@ struct SQVM;
 #define TK_CONST 324
 #define TK_RAWCALL 325
 
+// sqx custom keywords
+#define TK_VAR 327
+
 
 
 typedef void(*CompilerErrorFunc)(void *ud, const SQChar *s);

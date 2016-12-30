@@ -73,7 +73,8 @@ struct SQVM;
 #define TK_RAWCALL 325
 
 // sqx custom keywords
-#define TK_VAR 327
+#define TK_VAR 427
+#define TK_DEF 428
 
 
 

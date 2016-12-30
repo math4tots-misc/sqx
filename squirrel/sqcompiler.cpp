@@ -264,6 +264,7 @@ public:
             _fs->_unresolvedcontinues.push_back(_fs->GetCurrentPos());
             Lex();
             break;
+        case TK_DEF:
         case TK_FUNCTION:
             FunctionStatement();
             break;
@@ -839,6 +840,7 @@ public:
             _fs->AddInstruction(_OP_NEWOBJ, _fs->PushTarget(),0,NOT_TABLE);
             Lex();ParseTableOrClass(_SC(','),_SC('}'));
             break;
+        case TK_DEF:
         case TK_FUNCTION: FunctionExp(_token);break;
         case _SC('@'): FunctionExp(_token,true);break;
         case TK_CLASS: Lex(); ClassExp();break;
@@ -957,11 +959,12 @@ public:
                 }
             }
             switch(_token) {
+            case TK_DEF:
             case TK_FUNCTION:
             case TK_CONSTRUCTOR:{
                 SQInteger tk = _token;
                 Lex();
-                SQObject id = tk == TK_FUNCTION ? Expect(TK_IDENTIFIER) : _fs->CreateString(_SC("constructor"));
+                SQObject id = (tk == TK_DEF || tk == TK_FUNCTION) ? Expect(TK_IDENTIFIER) : _fs->CreateString(_SC("constructor"));
                 Expect(_SC('('));
                 _fs->AddInstruction(_OP_LOAD, _fs->PushTarget(), _fs->GetConstant(id));
                 CreateFunction(id);
@@ -1006,7 +1009,7 @@ public:
     {
         SQObject varname;
         Lex();
-        if( _token == TK_FUNCTION) {
+        if(_token == TK_DEF || _token == TK_FUNCTION) {
             Lex();
             varname = Expect(TK_IDENTIFIER);
             Expect(_SC('('));
@@ -1415,7 +1418,7 @@ public:
         Lex(); Expect(_SC('('));
         SQObjectPtr dummy;
         CreateFunction(dummy,lambda);
-        _fs->AddInstruction(_OP_CLOSURE, _fs->PushTarget(), _fs->_functions.size() - 1, ftype == TK_FUNCTION?0:1);
+        _fs->AddInstruction(_OP_CLOSURE, _fs->PushTarget(), _fs->_functions.size() - 1, (ftype == TK_DEF || ftype == TK_FUNCTION)?0:1);
     }
     void ClassExp()
     {

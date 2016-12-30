@@ -2,7 +2,7 @@
 
 all: sqx
 
-sqx: squirrel sq sqstdlib include
+sqx: $(wildcard squirrel/*) sq/sq.cpp $(wildcard sqstdlib/*) $(wildcard include/*)
 	g++ \
 		-Iinclude -Isqstdlib -Isquirrel \
 		-Wall -Werror -Wpedantic -Wextra \

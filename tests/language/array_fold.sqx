@@ -1,0 +1,4 @@
+var xs = [1 2 3]
+
+assert(xs.reduce(@(a, b) a + b) == 6)
+assert(xs.fold(15, @(acc, x) acc + x) == 21)

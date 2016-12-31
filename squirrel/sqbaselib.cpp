@@ -613,6 +613,29 @@ static SQInteger array_reduce(HSQUIRRELVM v)
     return 1;
 }
 
+// sqx custom
+static SQInteger array_fold(HSQUIRRELVM v)
+{
+    SQObject &o = stack_get(v,1);
+    SQArray *a = _array(o);
+    SQInteger size = a->Size();
+    SQObjectPtr &res = stack_get(v, 2);
+    SQObjectPtr other;
+    for(SQInteger n = 0; n < size; n++) {
+        a->Get(n,other);
+        v->Push(o);  // this
+        v->Push(res);
+        v->Push(other);
+        if(SQ_FAILED(sq_call(v,3,SQTrue,SQFalse))) {
+            return SQ_ERROR;
+        }
+        res = v->GetUp(-1);
+        v->Pop();
+    }
+    v->Push(res);
+    return 1;
+}
+
 static SQInteger array_filter(HSQUIRRELVM v)
 {
     SQObject &o = stack_get(v,1);
@@ -793,6 +816,7 @@ const SQRegFunction SQSharedState::_array_default_delegate_funcz[]={
     {_SC("map"),array_map,2, _SC("ac")},
     {_SC("apply"),array_apply,2, _SC("ac")},
     {_SC("reduce"),array_reduce,2, _SC("ac")},
+    {_SC("fold"),array_fold,3, _SC("a.c")},
     {_SC("filter"),array_filter,2, _SC("ac")},
     {_SC("find"),array_find,2, _SC("a.")},
     {NULL,(SQFUNCTION)0,0,NULL}

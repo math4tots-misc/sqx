@@ -1,0 +1,13 @@
+def f() = 1 + 2
+assert(f() == 3)
+
+class Klass {
+  def method() = "method result"
+}
+assert(Klass().method() == "method result")
+
+var lam = @(a, b) = a + b
+assert(lam(5, 7) == 12)
+
+var f2 = def(a, b) = a * b
+assert(f2(5, 7) == 35)

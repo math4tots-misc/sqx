@@ -1523,10 +1523,20 @@ public:
 
         SQFuncState *currchunk = _fs;
         _fs = funcstate;
+
+        // Allow '=' syntax in function definitions.
+        // E.g.
+        // def f() = 123
+        // assert(f() == 123)
+        if (_token == _SC('=')) {
+            Expect(_SC('='));
+            lambda = true;
+        }
+
         if(lambda) {
             Expression();
-            _fs->AddInstruction(_OP_RETURN, 1, _fs->PopTarget());}
-        else {
+            _fs->AddInstruction(_OP_RETURN, 1, _fs->PopTarget());
+        } else {
             Statement(false);
         }
         funcstate->AddLineInfos(_lex._prevtoken == _SC('\n')?_lex._lasttokenline:_lex._currentline, _lineinfo, true);

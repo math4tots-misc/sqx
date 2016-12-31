@@ -97,7 +97,6 @@ public:
     void Lex(){ _token = _lex.Lex();}
     SQObject Expect(SQInteger tok)
     {
-
         if(_token != tok) {
             if(_token == TK_CONSTRUCTOR && tok == TK_IDENTIFIER) {
                 //do nothing

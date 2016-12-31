@@ -12,6 +12,8 @@ I tried making my own language, but it was really slow. Squirrel is fast and has
 1. `range` function, that generates an iterable I can `for` over.
 1. Python style `for` loops.
 1. Don't require parentheses around the condition of `while` or `if` statements.
+1. More helpful `tostring` for `array` type.
+1. More helpful `tostring` for `table` type.
 1. `if` expressions. (might be easy by just aliasing the `?:` operator)
 1. Overridable equality and hash for `instance` objects. It looks like Squirrel's equality is basically object identity. Tables use object equality, and `==` is object identity except for when comparing an int and float, in which case both values are converted to float for comparison.
 1. Python style newline rules. Not indentation based, but will assume '{}' are like begin/end indent, and newlines are ignored iff the most enclosing grouping is either '()' or '[]'. Requires Table literals no longer using '{}' as delimiters first.

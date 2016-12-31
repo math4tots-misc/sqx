@@ -1,0 +1,11 @@
+var flag = false
+if (true) {
+  flag = true
+}
+assert(flag)
+
+flag = false
+if (false) {} else {
+  flag = true
+}
+assert(flag)

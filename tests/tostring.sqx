@@ -1,0 +1,13 @@
+class A {
+  x = 0
+  y = null
+
+  constructor(x=0) {
+    this.x = x
+  }
+  def _tostring() = "A.tostring(" + x + ")"
+  def _add(a) = A(x + a.x)
+}
+
+assert(A(16) + "" == "A.tostring(16)")
+print(A(16) + A(81) + "" == "A.tostring(97)")

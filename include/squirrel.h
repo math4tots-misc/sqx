@@ -22,6 +22,17 @@ THE SOFTWARE.
 #ifndef _SQUIRREL_H_
 #define _SQUIRREL_H_
 
+////////////////
+// BEGIN SQX CONFIG
+////////////////
+
+#define _SQ64
+#define SQUSEDOUBLE
+
+////////////////
+// END SQX CONFIG
+////////////////
+
 #ifdef _SQ_CONFIG_INCLUDE
 #include _SQ_CONFIG_INCLUDE
 #endif

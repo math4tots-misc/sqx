@@ -16,6 +16,8 @@ I tried making my own language, but it was really slow. Squirrel is fast and has
 
 1. Python style triple quote string literals. So """x""" should be the same as "x".
 1. `array.fold` method.
+1. Overridable equality and hash for `instance` objects. It looks like Squirrel's equality is basically object identity. Tables use object equality, and `==` is object identity except for when comparing an int and float, in which case both values are converted to float for comparison.
+1. Use `double (64+)` instead of `float (32+)` for float.
 1. Python style newline rules. Not indentation based, but will assume '{}' are like begin/end indent, and newlines are ignored iff the most enclosing grouping is either '()' or '[]'. Requires Table literals no longer using '{}' as delimiters first.
 1. Related to 'Python style newline rules' -- Table literals will no longer use '{}' as delimiters.
 1. Block expressions. I think I need to better understand how the compiler generates bytecode before tackling this one. This may involve turning a lot of things that were previously statements into expressions, and there may be some unforseen consequences. One thing that worries me is what might happen if I allow 'break/continue/return' to appear in an expression and not only as standalone statements.

@@ -12,8 +12,8 @@ sqx: $(wildcard squirrel/*) sq/sq.cpp $(wildcard sqstdlib/*) $(wildcard include/
 		-o sqx \
 		sq/sq.cpp sqstdlib/*.cpp squirrel/*.cpp
 
-test: sqx $(wildcard tests/*)
-	for t in tests/*.sqx; do ./sqx $$t; done
+test: sqx $(wildcard tests/**/*.sqx)
+	for t in tests/**/*.sqx; do echo "testing $$t" && ./sqx $$t; done
 
 clean:
 	rm -rf sqx

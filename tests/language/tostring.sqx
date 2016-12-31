@@ -10,4 +10,4 @@ class A {
 }
 
 assert(A(16) + "" == "A.tostring(16)")
-print(A(16) + A(81) + "" == "A.tostring(97)")
+assert(A(16) + A(81) + "" == "A.tostring(97)")

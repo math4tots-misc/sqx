@@ -8,7 +8,6 @@ I tried making my own language, but it was really slow. Squirrel is fast and has
 
 ## To do
 
-1. Python style triple quote string literals. So """x""" should be the same as "x".
 1. `array.fold` method.
 1. `range` function, that generates an iterable I can `for` over.
 1. Python style `for` loops.
@@ -45,3 +44,4 @@ I tried making my own language, but it was really slow. Squirrel is fast and has
 1. Keyword 'def'. Identical to 'function'. I just like to type 'def' better than 'function'. 'function' is just too long.
 1. '=' style 'def/function' functions. For instance, 'def f() = 123' is equivalent to 'def f() { return 123 }'.
 1. Use `double (64+)` instead of `float (32+)` for float. Also always use 64 bit integers. This is easily adjustable with the config section in `squirrel.h`.
+1. Python style triple quote string literals. So """x""" should be the same as "x".

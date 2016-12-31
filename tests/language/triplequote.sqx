@@ -1,0 +1,12 @@
+var s = """a
+"
+b\n"""
+assert(s == "a\n\"\nb\n")
+
+s = @"""a
+"
+b\n"""
+assert(s == "a\n\"\nb\\n")
+
+s = """ " """
+assert(s == " \" ")

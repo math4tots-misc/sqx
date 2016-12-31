@@ -24,6 +24,7 @@ private:
     void LexLineComment();
     SQInteger ReadID();
     void Next();
+    bool AtQuote(LexChar, bool);
 #ifdef SQUNICODE
 #if WCHAR_SIZE == 2
     SQInteger AddUTF16(SQUnsignedInteger ch);
@@ -46,6 +47,8 @@ public:
     SQLEXREADFUNC _readf;
     SQUserPointer _up;
     LexChar _currdata;
+    LexChar _peek1;
+    LexChar _peek2;
     SQSharedState *_sharedstate;
     sqvector<SQChar> _longstr;
     CompilerErrorFunc _errfunc;

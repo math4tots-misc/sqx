@@ -80,6 +80,10 @@ void SQLexer::Init(SQSharedState *ss, SQLEXREADFUNC rg, SQUserPointer up,Compile
     _currentcolumn = 0;
     _prevtoken = -1;
     _reached_eof = SQFalse;
+
+    // Need to call 'Next()' two more times to prime '_peek1' and '_peek2'.
+    Next();
+    Next();
     Next();
 }
 
@@ -90,14 +94,24 @@ void SQLexer::Error(const SQChar *err)
 
 void SQLexer::Next()
 {
-    SQInteger t = _readf(_up);
-    if(t > MAX_CHAR) Error(_SC("Invalid character"));
-    if(t != 0) {
-        _currdata = (LexChar)t;
-        return;
+    if (_reached_eof) {
+        _currdata = _peek1;
+        _peek1 = _peek2;
+        _peek2 = SQUIRREL_EOB;
+    } else {
+        SQInteger t = _readf(_up);
+        if(t > MAX_CHAR) Error(_SC("Invalid character"));
+        if(t != 0) {
+            _currdata = _peek1;
+            _peek1 = _peek2;
+            _peek2 = (LexChar)t;
+        } else {
+            _currdata = _peek1;
+            _peek1 = _peek2;
+            _peek2 = SQUIRREL_EOB;
+            _reached_eof = SQTrue;
+        }
     }
-    _currdata = SQUIRREL_EOB;
-    _reached_eof = SQTrue;
 }
 
 const SQChar *SQLexer::Tok2Str(SQInteger tok)
@@ -210,7 +224,7 @@ SQInteger SQLexer::Lex()
                 RETURN_TOKEN(stype);
             }
             Error(_SC("error parsing the string"));
-                       }
+        }
         case _SC('"'):
         case _SC('\''): {
             SQInteger stype;
@@ -218,11 +232,13 @@ SQInteger SQLexer::Lex()
                 RETURN_TOKEN(stype);
             }
             Error(_SC("error parsing the string"));
-            }
-        case _SC('{'): case _SC('}'): case _SC('('): case _SC(')'): case _SC('['): case _SC(']'):
-        case _SC(';'): case _SC(','): case _SC('?'): case _SC('^'): case _SC('~'):
-            {SQInteger ret = CUR_CHAR;
-            NEXT(); RETURN_TOKEN(ret); }
+        }
+        case _SC('{'): case _SC('}'): case _SC('('): case _SC(')'):
+        case _SC('['): case _SC(']'): case _SC(';'): case _SC(','):
+        case _SC('?'): case _SC('^'): case _SC('~'): {
+            SQInteger ret = CUR_CHAR;
+            NEXT(); RETURN_TOKEN(ret);
+        }
         case _SC('.'):
             NEXT();
             if (CUR_CHAR != _SC('.')){ RETURN_TOKEN('.') }
@@ -353,20 +369,33 @@ SQInteger SQLexer::ProcessStringHexEscape(SQChar *dest, SQInteger maxdigits)
     return n;
 }
 
+bool SQLexer::AtQuote(LexChar q, bool triplequote)
+{
+    return triplequote ?
+        (CUR_CHAR == q && _peek1 == q && _peek2 == q) :
+        CUR_CHAR == q;
+}
+
 SQInteger SQLexer::ReadString(SQInteger ndelim,bool verbatim)
 {
     INIT_TEMP_STRING();
     NEXT();
+    bool triplequote = false;
+    if (CUR_CHAR == ndelim && _peek1 == ndelim) {
+        NEXT();
+        NEXT();
+        triplequote = true;
+    }
     if(IS_EOB()) return -1;
     for(;;) {
-        while(CUR_CHAR != ndelim) {
+        while(!AtQuote(ndelim, triplequote)) {
             SQInteger x = CUR_CHAR;
             switch (x) {
             case SQUIRREL_EOB:
                 Error(_SC("unfinished string"));
                 return -1;
             case _SC('\n'):
-                if(!verbatim) Error(_SC("newline in a constant"));
+                if(!triplequote) Error(_SC("newline in a constant"));
                 APPEND_CHAR(CUR_CHAR); NEXT();
                 _currentline++;
                 break;
@@ -425,11 +454,14 @@ SQInteger SQLexer::ReadString(SQInteger ndelim,bool verbatim)
             }
         }
         NEXT();
-        if(verbatim && CUR_CHAR == '"') { //double quotation
+        if(!triplequote && verbatim && CUR_CHAR == '"') { //double quotation
             APPEND_CHAR(CUR_CHAR);
             NEXT();
-        }
-        else {
+        } else {
+            if (triplequote) {
+                NEXT();
+                NEXT();
+            }
             break;
         }
     }

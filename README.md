@@ -6,13 +6,6 @@ Squirrel with mods.
 
 I tried making my own language, but it was really slow. Squirrel is fast and has most of the features I really want. I just wished some of the syntax was a bit different.
 
-## Done
-
-1. Keyword 'var'. Identical to 'local'. I just like to type 'var' better than 'local'.
-1. Keyword 'def'. Identical to 'function'. I just like to type 'def' better than 'function'. 'function' is just too long.
-1. '=' style 'def/function' functions. For instance, 'def f() = 123' is equivalent to 'def f() { return 123 }'.
-1. Use `double (64+)` instead of `float (32+)` for float. Also always use 64 bit integers. This is easily adjustable with the config section in `squirrel.h`.
-
 ## To do
 
 1. Python style triple quote string literals. So """x""" should be the same as "x".
@@ -45,3 +38,10 @@ I tried making my own language, but it was really slow. Squirrel is fast and has
   ```
 
   One really appealing use case for this is breaking out of multiple loops. I like this better than labeled breaks. Ideally, I'd like to be able to do 'labeled returns', but I can't think of an obvious way to implement labeled returns without better understanding how Squirrel works.
+
+## Done
+
+1. Keyword 'var'. Identical to 'local'. I just like to type 'var' better than 'local'.
+1. Keyword 'def'. Identical to 'function'. I just like to type 'def' better than 'function'. 'function' is just too long.
+1. '=' style 'def/function' functions. For instance, 'def f() = 123' is equivalent to 'def f() { return 123 }'.
+1. Use `double (64+)` instead of `float (32+)` for float. Also always use 64 bit integers. This is easily adjustable with the config section in `squirrel.h`.

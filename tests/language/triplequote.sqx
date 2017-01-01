@@ -10,3 +10,18 @@ assert(s == "a\n\"\nb\\n")
 
 s = """ " """
 assert(s == " \" ")
+
+# make sure double quotes work with single quote verbatim literals
+# for Squirrel compatibility
+s = @" "" "
+assert(s == " \" ")
+
+# on the other hand, for triple string, don't escape double quotes
+s = """ "" """
+assert(s == " \"\" ")
+s = @""" "" """
+assert(s == " \"\" ")
+
+# Unfortunately, some things are not backward compatible,
+# like @"""" would be same as "\"" in Squirrel, but
+# would be seen as an unterminated triple string in sqx.
